@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TiendaERP — Vibras Positivas HM</title>
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f5c842">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -191,7 +191,6 @@
         const saved = localStorage.getItem('erp_data_v2');
         if(saved) DB = JSON.parse(saved);
         
-        // Cargar Datos en UI
         document.getElementById('cfg-name').value = DB.config.name;
         document.getElementById('cfg-wa-admin').value = DB.config.waAdmin;
         document.getElementById('cfg-wa-tienda').value = DB.config.waTienda;
@@ -207,11 +206,9 @@
     function closeBanner() { document.getElementById('wa-banner').classList.remove('show'); }
 
     function renderAll() {
-        // Dashboard
         document.getElementById('k-ventas').innerText = '$' + DB.ventas.reduce((a,b)=>a+b.total, 0).toLocaleString();
         document.getElementById('k-stock').innerText = DB.prods.filter(p=>p.stk < 5).length;
         
-        // Inventario
         const tbody = document.getElementById('t-inv');
         tbody.innerHTML = DB.prods.map(p => `
             <tr>
@@ -301,11 +298,17 @@
         reader.readAsText(input.files[0]);
     }
 
-    // Registro del Service Worker para PWA
+    // REGISTRO DE SERVICE WORKER MEJORADO
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('SW registrado para Vibras Positivas HM'))
-        .catch(err => console.error('Error SW', err));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js', { scope: './' })
+          .then(reg => {
+            console.log('SW registrado con éxito para Vibras Positivas HM');
+            // Forzamos la actualización si hay cambios
+            reg.update();
+          })
+          .catch(err => console.error('Error al registrar SW:', err));
+      });
     }
 </script>
 </body>
