@@ -1,13 +1,19 @@
-const CACHE_NAME = 'tiendaerp-v2';
-const assets = [
-  'https://haroldco45.github.io/tiendaERP/',
-  'https://haroldco45.github.io/tiendaERP/index.html'
-];
+const CACHE_NAME = 'vibras-erp-v1';
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(assets)));
+// No listamos archivos aquí para evitar errores de carga inicial
+self.addEventListener('install', (event) => {
+    self.skipWaiting(); // Obliga al SW nuevo a activarse
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+self.addEventListener('activate', (event) => {
+    event.waitUntil(clients.claim()); // Toma el control de la página de inmediato
+});
+
+self.addEventListener('fetch', (event) => {
+    // Estrategia: Ir a la red, y si falla, buscar en caché
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            return caches.match(event.request);
+        })
+    );
 });
