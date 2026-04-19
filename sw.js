@@ -1,8 +1,7 @@
-const CACHE_NAME = 'tiendaerp-v1';
+const CACHE_NAME = 'tiendaerp-v2';
 const assets = [
-  './',
-  './index.html',
-  'https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap'
+  'https://haroldco45.github.io/tiendaERP/',
+  'https://haroldco45.github.io/tiendaERP/index.html'
 ];
 
 self.addEventListener('install', e => {
